@@ -56,9 +56,7 @@ int_fast32_t rx=14000000; // Starting frequency of VFO freq
 int_fast32_t rx2=1; // temp variable to hold the updated frequency
 int_fast32_t rxif=10000000; // IF freq, will be summed with vfo freq - rx variable 10002900
 int_fast32_t rxbfo=10000000;  //BFO generator 10002250  
-int_fast32_t rxofset=3000;  
 int_fast32_t rxRIT=0;
-
 int RITon=0;
 int_fast32_t rx600hz=0;   // cw offset 700
 long cal=130;
@@ -162,7 +160,7 @@ Wire.begin();
   Serial.println("*Enable PLL Output\n");
   // Set CLK1 to output the starting "vfo" frequency as set above by vfo = ?
   // Set CLK1 to output vfo + if +/- offset = rx vfo frequency	
-  si5351.set_freq((rx + rxif + rxofset)*100L , SI5351_CLK0);
+  si5351.set_freq((rx + rxif + 3000)*100L , SI5351_CLK0);
   // Set CLK0 to output txo vfo frequency
   si5351.set_freq((1000000L), SI5351_CLK1);
   si5351.output_enable(SI5351_CLK1, 0);
@@ -345,7 +343,7 @@ void sendFrequency(double frequency) {
 	rx=frequency;
   //VFO CLK1
 //	si5351.set_freq(((rx + rxbfo + rxRIT)*100LL), SI5351_CLK1);
-  si5351.set_freq(((rx + rxif + rxofset + rxRIT)*100LL), SI5351_CLK0);
+  si5351.set_freq(((rx + rxif + 3000 +rxRIT)*100LL), SI5351_CLK0);
 	//BFO Set CLK2 to output bfo frequency
   si5351.set_freq((rxbfo*100LL), SI5351_CLK2);
 	Serial.println(frequency);   // for serial console debuging
